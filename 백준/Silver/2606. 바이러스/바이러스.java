@@ -1,44 +1,47 @@
 import java.util.*;
 
 class Main {
-    static boolean[] visit;
-    static LinkedList<Integer>[] list;
-    static Deque<Integer> stack;
+    public static LinkedList<Integer>[] graph;
+    public static boolean[] visit;
 
     public static void dfs(int v){
         visit[v] = true;
-        stack.push(v);
-        for(int nextV : list[v]){
-            if(visit[nextV]== false){
+        for(int nextV : graph[v]){
+            if(visit[nextV] != true){
                 dfs(nextV);
             }
         }
-        
     }
     
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        stack = new ArrayDeque<>();
-        
+
         int n = sc.nextInt();
-        int m = sc.nextInt();
-        
+        int p = sc.nextInt();
+
         visit = new boolean[n+1];
-        list = new LinkedList[n+1];
-        for(int i =1;i<=n;i++){
-            list[i] = new LinkedList<Integer>();
+        
+
+        graph = new LinkedList[n+1];
+        for(int i = 1;i<=n;i++){
+            graph[i] = new LinkedList<Integer>();
         }
 
-        for(int i =1;i<=m;i++){
+        for(int i = 0;i<p;i++){
             int a = sc.nextInt();
             int b = sc.nextInt();
-            list[a].add(b);
-            list[b].add(a);
-        }
 
+            graph[a].add(b);
+            graph[b].add(a);
+        }
         dfs(1);
 
-        System.out.println(stack.size()-1);
-        
+        int cnt = 0;
+        for(int i =1;i<=n;i++){
+            if(visit[i] == true){
+                cnt++;
+            }
+        }
+        System.out.println(cnt-1);  
     }
 }
