@@ -1,32 +1,32 @@
 import java.util.*;
 
 class Main {
-    static boolean[] visit;
-    static LinkedList<Integer>[] list;
+    public static LinkedList<Integer>[] graph;
+    public static boolean[] visited;
 
     public static void dfs(int v){
-        visit[v] = true;
+        visited[v] = true;
         System.out.print(v+" ");
-        for(int nextV : list[v]){
-            if(visit[nextV] == false){
+        for(int nextV : graph[v]){
+            if(visited[nextV] != true){
                 dfs(nextV);
             }
         }
     }
 
     public static void bfs(int v){
-        Queue<Integer> que = new LinkedList<>();
-        que.offer(v);
-        visit[v] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(v);
+        visited[v] = true;
 
-        while(que.isEmpty() == false){
-            int tmp = que.poll();
+        while(!queue.isEmpty()){
+            int tmp = queue.poll();
             System.out.print(tmp+" ");
 
-            for(int nextV : list[tmp]){
-                if(visit[nextV] == false){
-                    que.offer(nextV);
-                    visit[nextV] = true;
+            for(int nextV : graph[tmp]){
+                if(visited[nextV] != true){
+                    queue.add(nextV);
+                    visited[nextV] = true;
                 }
             }
         }
@@ -34,38 +34,37 @@ class Main {
     
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
+        
         int n = sc.nextInt();
         int m = sc.nextInt();
         int v = sc.nextInt();
 
-        list = new LinkedList[n+1];
-        visit = new boolean[n+1];
-        
-        for(int i =1;i<=n;i++){
-            list[i] = new LinkedList<Integer>();
-        }
+        graph = new LinkedList[n+1];
+        visited = new boolean[n+1];
 
-        for(int i =1;i<=m;i++){
+        for(int i =1;i<=n;i++){
+            graph[i] = new LinkedList<Integer>();
+        }
+        
+        for(int i = 0;i<m;i++){
             int a = sc.nextInt();
             int b = sc.nextInt();
-            list[a].add(b);
-            list[b].add(a);
-        }
 
-        for(int i =1;i<=n;i++){
-            Collections.sort(list[i]);
+            graph[a].add(b);
+            graph[b].add(a);
         }
-
-        dfs(v);
+        for(int i = 1;i<=n;i++){
+            Collections.sort(graph[i]);
+        }
         
-        for(int i =0;i<visit.length;i++){
-            visit[i] = false;
+        dfs(v);
+
+        for(int i = 1;i<=n;i++){
+            visited[i] = false;
         }
         System.out.println();
-        
+
         bfs(v);
 
-        
     }
 }
