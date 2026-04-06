@@ -1,64 +1,72 @@
 import java.util.*;
 
+class Point{
+    int y;
+    int x;
+    public Point(int y, int x){
+        this.y = y;
+        this.x = x;
+    }
+}
+
 class Main {
-    public static int[] dy = {0, 1, 0, -1};
-    public static int[] dx = {1, 0, -1, 0};
-    public static String[] num;
-    public static boolean[][] visit;
+    public static int[] dy = {0,1,0,-1};
+    public static int[] dx = {1,0,-1,0};
+    
+    public static boolean[][] visited;
+    public static String[] str;
+    public static int n;
 
-    public static int sum;
+    public static int bfs(int y, int x){
+        Queue<Point> queue = new LinkedList<Point>();
+        queue.add(new Point(y,x));
+        visited[y][x] = true;
 
-    public static void dfs(int y, int x, int n){
-        visit[y][x] = true;
-        sum++;
-        for(int i =0;i<4;i++){
-            int ny = y + dy[i];
-            int nx = x + dx[i];
+        int cnt = 1;
 
-            if(ny >= 0 && nx >= 0 && ny < n && nx < n){
-                if(visit[ny][nx] == false && num[ny].charAt(nx) == '1'){
-                    visit[ny][nx] = true;
-                    dfs(ny, nx, n);
+        while(!queue.isEmpty()){
+            Point tmp = queue.poll();
+            for(int i = 0;i<4;i++){
+                int ny = tmp.y + dy[i];
+                int nx = tmp.x + dx[i];
+
+                if(ny>=0 && nx>=0 && ny<n && nx<n){
+                    if(visited[ny][nx]!=true && str[ny].charAt(nx) == '1'){
+                        visited[ny][nx] = true;
+                        queue.offer(new Point(ny,nx));
+                        cnt++;
+                    }
                 }
             }
         }
+        return cnt;
     }
     
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int n = sc.nextInt();
-        
-        visit = new boolean[n][n];
-        num = new String[n];
+        n = sc.nextInt();
+        str = new String[n];
         for(int i =0;i<n;i++){
-            num[i] = sc.next();
+            str[i] = sc.next();
         }
 
-        ArrayList<Integer> housecnt = new ArrayList<>();
+        visited = new boolean[n][n];
 
-        int total = 0;
-
-        for(int i =0;i<n;i++){
+        List<Integer> town = new ArrayList<>();
+        for(int i = 0;i<n;i++){
             for(int j = 0;j<n;j++){
-                if(visit[i][j]==false && num[i].charAt(j)=='1'){
-                    total++;
-                    sum = 0;
-                    dfs(i,j,n);
-
-                    housecnt.add(sum);
-                }else{
-                    continue;
+                if(visited[i][j] == false && str[i].charAt(j) == '1'){
+                    int res = bfs(i,j);
+                    town.add(res);
                 }
             }
         }
 
-        System.out.println(total);
-
-        Collections.sort(housecnt);
-        for(int x:housecnt){
-            System.out.println(x);
+        Collections.sort(town);
+        System.out.println(town.size());
+        for(int k : town){
+            System.out.println(k);
         }
-        
     }
 }
